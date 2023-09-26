@@ -1,0 +1,58 @@
+﻿@page "/DeleteEmployee/{Id}"
+@using BlazorApp11.Data
+@inject EmployeeService employeeService
+@inject NavigationManager NavigationManager
+<h3>Delete Employee</h3>
+<hr />
+<form>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="for-group">
+                <label for="Id" class="control-label">Id</label>
+                <lable>"@obj.Id"</lable> 
+            </div>
+            <div class="for-group">
+                <label for="Name" class="control-label">Name</label>
+                <lable>"@obj.Name"</lable>
+            </div>
+            <div class="for-group">
+                <label for="Name" class="control-label">Email</label>
+                <lable>"@obj.Email"</lable>
+            </div>
+            <div class="for-group">
+                <label for="Name" class="control-label">IsActive</label>
+                <lable>"@obj.IsActive"</lable>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input typeof="button" class="btn btn-primary" @onclick="@DeleteEmployeeRecord" value="Delete Employee" />
+
+                <input typeof="button" class="btn btn-danger" @onclick="@Cancel" value="Cancel" />
+            </div>
+        </div>
+
+    </div>
+</form>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    Employee obj = new Employee();
+    protected override async Task OnInitializedAsync()
+    {
+        obj = await Task.Run(() => employeeService.GetEmployeeById(Convert.ToInt32(Id)));
+    }
+    protected async void DeleteEmployeeRecord()
+    {
+        await employeeService.DeleteEmployee(obj);
+        NavigationManager.NavigateTo("Employees");
+    }
+    protected async void Cancel()
+    {
+        NavigationManager.NavigateTo("Employees");
+    }
+
+}
